@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MySQL_quickCF;
 using MySql.Data.MySqlClient;
+using System.Collections.Generic;
 
 namespace UnitTest
 {
@@ -16,8 +17,8 @@ namespace UnitTest
 
             try
             {
-               // r.ExecuteDirect("INSERT into brinemix(`someValue`, `somePercent`) VALUES (123, 12)");
-               r.ExecuteDirect("INSERT into brinemix(`someValue`, `somePercent`, `someNotes`) VALUES (123, 12, \"arse\")");
+                // r.ExecuteDirect("INSERT into brinemix(`someValue`, `somePercent`) VALUES (123, 12)");
+                r.ExecuteDirect("INSERT into brinemix(`someValue`, `somePercent`, `someNotes`) VALUES (123, 12, \"arse\")");
             }
             catch (Exception ex)
             {
@@ -31,17 +32,8 @@ namespace UnitTest
         public void GetTasksTest()
         {
             Repo r = new Repo();
-
-            try
-            {
-                r.getTasks();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\n" + ex.ToString());
-
-                throw;
-            }
+            
+            r.getTasks();
         }
 
         [TestMethod]
@@ -62,9 +54,9 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void copyPasted()
+        public void RetrieveVersionInfo()
         {
-            string sql = "SELECT * FROM tasks;";
+            string sql = "SELECT version();";
             MySqlConnection con = new MySqlConnection("server=127.0.0.1; uid=orkos2; pwd=orkos; database=rsp_test; Charset=utf8;");
             // con.ConnectionString = Repo.ConnectionString;
 
@@ -75,6 +67,11 @@ namespace UnitTest
             try
             {
                 MySqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    MessageBox.Show(reader.GetString("version()"));
+                }
+
             }
             catch (Exception ex)
             {
@@ -82,12 +79,52 @@ namespace UnitTest
                 throw;
             }
 
-            // while (reader.Read())
-            // {
-            //     MessageBox.Show(reader.GetDecimal("brinePerc").ToString());
-            // }
-
             con.Close();
+        }
+
+        [TestMethod]
+        public void GetTasksDisectedTest()
+        {
+            List<Tasks> list = new List<Tasks>();
+
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection())
+                {
+                    conn.ConnectionString = Repo.ConnectionString;
+                    conn.Open();
+
+                    using (MySqlCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $"SELECT * FROM tasks WHERE 'isDone' = 0 ";
+
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Tasks container = new Tasks
+                                    (reader.GetInt16("ID"),
+                                    reader.GetFloat("brineOrder"),
+                                    reader.GetFloat("brinePerc"),
+                                    reader.GetString("brineNotes"),
+                                    reader.GetByte("isDone"),
+                                    reader.GetDateTime("timeStamp")
+                                    );
+                                list.Add(container);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n" + ex.ToString());
+                throw;
+            }
+
+
         }
     }
 }
+
+

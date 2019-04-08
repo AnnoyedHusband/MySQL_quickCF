@@ -42,6 +42,10 @@ namespace MySQL_quickCF
                 }
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public void insertReport(float someValue, float somePercent, string Notes)
         {
             string exeCommand = "INSERT INTO brinemix(`someValue`, `somePercent`, `someNotes`) VALUES ( @someValue, @somePercent, @Notes)";
@@ -72,6 +76,10 @@ namespace MySQL_quickCF
             }
         }
 
+        /// <summary>
+        /// list<Tasks> myList = getTasks();
+        /// </summary>
+        /// <returns>full list of tasks List<Tasks></returns>
         public List<Tasks> getTasks()
         {
             var list = new List<Tasks>();
@@ -96,7 +104,8 @@ namespace MySQL_quickCF
                                     reader.GetFloat("brineOrder"),
                                     reader.GetFloat("brinePerc"),
                                     reader.GetString("brineNotes"),
-                                    reader.GetInt32("isDone")
+                                    reader.GetByte("isDone"),
+                                    reader.GetDateTime("timeStamp")
                                     );
                                 list.Add(container);
                             }
@@ -115,28 +124,34 @@ namespace MySQL_quickCF
 
     }
 
+
+    /// <summary>
+    /// uzduociu klase. Perkelti i kita lapa, prideti klase Brine
+    /// </summary>
     public class Tasks
     {
         public int ID { get; set; }
         public float BrineOrder { get; set; }
         public float BrinePerc { get; set; }
         public string BrineNotes { get; set; }
-        public int IsDone { get; set; }
+        public byte IsDone { get; set; }
+        public DateTime Datetime { get; set; }
 
-        public Tasks() : this(0, 0, 0, "", 0) { }
+        public Tasks() : this(0, 0, 0, "", 0, new DateTime()) { }
 
-        public Tasks(int id, float brineOrder, float brinePerc, string brineNotes, int isDone)
+        public Tasks(int id, float brineOrder, float brinePerc, string brineNotes, byte isDone, DateTime datetime)
         {
             ID = id;
             BrineOrder = brineOrder;
             BrinePerc = brinePerc;
             BrineNotes = brineNotes;
             IsDone = isDone;
+            Datetime = datetime;
         }
 
         public override string ToString()
         {
-            return ID + " " + BrineOrder + " " + BrinePerc + " " + BrineNotes + " " + IsDone;
+            return ID + " " + BrineOrder + " " + BrinePerc + " " + BrineNotes + " " + IsDone + " " + Datetime;
         }
     }
 }
