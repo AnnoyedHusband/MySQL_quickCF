@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySQL_quickCF", "MySQL_quickCF\MySQL_quickCF.csproj", "{59D2BF66-0405-4FC3-A53D-9347A6123542}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B3328CE-E313-4966-904C-EC2F146AE5EB} = {1B3328CE-E313-4966-904C-EC2F146AE5EB}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{1B3328CE-E313-4966-904C-EC2F146AE5EB}"
 EndProject
